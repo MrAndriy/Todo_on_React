@@ -1,14 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import List from '../List';
 import './AddList.scss';
 import Badge from '../Badge/index';
 import closeSvg from '../../assets/img/close.svg';
 
-function AddList({ colors }) {
+function AddList({ colors, onAdd }) {
 	const [visiblePopUp, setvisiblePopUp] = useState(false);
-	const [selectedColor, setSelectedColor] = useState(colors[0].id);
+	const [selectedColor, setSelectedColor] = useState(3);
+	const [isLoading, setIsLoading] = useState(false);
 
-	console.log(selectedColor);
+	const [inputValue, setInputValue] = useState('');
+
+	useEffect(() => {
+		if (Array.isArray(colors)) {
+			setSelectedColor(colors[0].id);
+		}
+	}, [colors]);
+
+	const onClose = () => {
+		setvisiblePopUp(false);
+		setInputValue('');
+		setSelectedColor(colors[0].id);
+	};
+
+	const addListHandler = () => {
+		if (!inputValue) {
+			alert('enter name of list');
+			return;
+		}
+		setIsLoading(true);
+		axios
+			.post('http://localhost:3001/lists', {
+				name: inputValue,
+				colorId: selectedColor,
+			})
+			.then(({ data }) => {
+				const color = colors.filter((c) => c.id === selectedColor)[0].name;
+				const listObj = { ...data, color: { name: color } };
+				onAdd(listObj);
+				onClose();
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
+	};
 
 	return (
 		<div className='add-list'>
@@ -48,12 +85,20 @@ function AddList({ colors }) {
 			{visiblePopUp && (
 				<div className='add-list__popup'>
 					<img
-						onClick={() => setvisiblePopUp(!visiblePopUp)}
+						onClick={onClose}
 						src={closeSvg}
 						alt='close btn'
 						className='add-list__popup-close-btn'
 					/>
-					<input className='field' type='text' placeholder='Folder name' />
+
+					<input
+						value={inputValue}
+						onChange={(e) => setInputValue(e.target.value)}
+						className='field'
+						type='text'
+						placeholder='Folder name'
+					/>
+
 					<div className='add-list__popup-colors'>
 						{colors.map((color) => (
 							<Badge
@@ -64,7 +109,9 @@ function AddList({ colors }) {
 							/>
 						))}
 					</div>
-					<button className='button'>Add</button>
+					<button onClick={addListHandler} className='button'>
+						{isLoading ? 'Adding.....' : 'Add'}
+					</button>
 				</div>
 			)}
 		</div>

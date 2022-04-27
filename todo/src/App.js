@@ -1,10 +1,40 @@
+import React, { useState, useEffect } from 'react';
 import './App.scss';
-import List from './components/List/';
-import AddList from './components/AddList';
+import axios from 'axios';
 
-import DB from './assets/db.json';
+import { List, AddList, Tasks } from './components';
 
 function App() {
+	const [lists, setLists] = useState(null);
+	const [colors, setColors] = useState(null);
+	const [activeItem, setActiveItem] = useState(null);
+
+	useEffect(() => {
+		axios
+			.get('http://localhost:3001/lists?_expand=color&_embed=tasks')
+			.then(({ data }) => {
+				setLists(data);
+			});
+		axios.get('http://localhost:3001/colors').then(({ data }) => {
+			setColors(data);
+		});
+	}, []);
+
+	const onAddList = (item) => {
+		const newList = [...lists, item];
+		setLists(newList);
+	};
+
+	const onEditListTitle = (id, title) => {
+		const newList = lists.map((item) => {
+			if (item.id === id) {
+				item.name = title;
+			}
+			return item;
+		});
+		setLists(newList);
+	};
+
 	return (
 		<div className='todo'>
 			<div className='todo__sidebar'>
@@ -26,23 +56,34 @@ function App() {
 								</svg>
 							),
 							name: 'All tasks',
-							active: true,
+							active: false,
 						},
 					]}
 				/>
-				<List
-					items={[
-						{ color: 'green', name: 'Buy' },
-						{ color: 'blue', name: 'FrontEnd' },
-						{ color: 'pink', name: 'Films' },
-						{ color: 'lime', name: 'Books' },
-						{ color: 'grey', name: 'Private' },
-					]}
-					isRemovable
-				/>
-				<AddList colors={DB.colors} />
+				{lists ? (
+					<List
+						items={lists}
+						onRemove={(id) => {
+							const newLists = lists.filter((item) => item.id !== id);
+							setLists(newLists);
+						}}
+						onClickItem={(item) => {
+							setActiveItem(item);
+						}}
+						activeItem={activeItem}
+						isRemovable
+					/>
+				) : (
+					'Loading'
+				)}
+
+				<AddList colors={colors} onAdd={onAddList} />
 			</div>
-			<div className='todo__tasks'></div>
+			<div className='todo__tasks'>
+				{lists && activeItem && (
+					<Tasks lists={activeItem} onEditTitle={onEditListTitle} />
+				)}
+			</div>
 		</div>
 	);
 }
