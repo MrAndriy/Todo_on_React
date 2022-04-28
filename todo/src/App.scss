@@ -40,6 +40,7 @@
 	border: 0;
 	padding: 10px 20px;
 	cursor: pointer;
+	font-style: 14px;
 
 	&:hover {
 		background: darken($color: #4dd599, $amount: 7);
@@ -47,6 +48,23 @@
 
 	&:active {
 		background: darken($color: #4dd599, $amount: 10);
+	}
+
+	&:disabled {
+		background-color: #444444;
+	}
+
+	&--grey {
+		background-color: #f4f6f8;
+		color: #444444;
+
+		&:hover {
+			background: darken(#f4f6f8, 3%);
+		}
+
+		&:active {
+			background: darken(#f4f6f8, 6%);
+		}
 	}
 }
 
@@ -57,6 +75,7 @@
 	border-radius: 4px;
 	padding: 8px 12px;
 	width: 100%;
+	font-style: 14px;
 
 	&:focus {
 		border-color: #c5c5c5;

@@ -2,11 +2,12 @@ import React from 'react';
 import axios from 'axios';
 
 import './Tasks.scss';
+import AddTaskForm from './AddTaskForm';
 
 //svg
 import editSvg from '../../assets/img/edit.svg';
 
-function Tasks({ lists, onEditTitle }) {
+function Tasks({ lists, onEditTitle, onAddTask }) {
 	const { tasks, name, id } = lists;
 
 	const editTitle = () => {
@@ -56,6 +57,7 @@ function Tasks({ lists, onEditTitle }) {
 						<input readOnly value={task.text} />
 					</div>
 				))}
+				<AddTaskForm list={lists} onAddTask={onAddTask} />
 			</div>
 		</div>
 	);

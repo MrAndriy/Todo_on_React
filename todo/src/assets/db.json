@@ -75,22 +75,16 @@
       "id": 12
     },
     {
-      "listId": 7,
-      "text": "Сделали сайдбар",
-      "completed": true,
-      "id": 15
+      "listId": 1,
+      "text": "test",
+      "completed": false,
+      "id": 13
     },
     {
-      "listId": 7,
-      "text": "Сделали список задач",
-      "completed": true,
-      "id": 16
-    },
-    {
-      "listId": 7,
-      "text": "Сделали удаление и редактирование задач и списков",
-      "completed": true,
-      "id": 17
+      "listId": 1,
+      "text": "test",
+      "completed": false,
+      "id": 14
     }
   ],
   "colors": [
