@@ -45,6 +45,18 @@ function App() {
 		setLists(newList);
 	};
 
+	const onDelete = async (task) => {
+		const { listId, id } = task;
+		const newList = lists.map((item) => {
+			if (item.id === listId) {
+				item.tasks = item.tasks.filter((delTask) => delTask.id !== id);
+			}
+			return item;
+		});
+		setLists(newList);
+		await axios.delete('http://localhost:3001/tasks/' + id);
+	};
+
 	return (
 		<div className='todo'>
 			<div className='todo__sidebar'>
@@ -90,12 +102,15 @@ function App() {
 				<AddList colors={colors} onAdd={onAddList} />
 			</div>
 			<div className='todo__tasks'>
-				{lists && activeItem && (
+				{lists && activeItem ? (
 					<Tasks
 						lists={activeItem}
 						onAddTask={onAddTask}
 						onEditTitle={onEditListTitle}
+						onDelete={onDelete}
 					/>
+				) : (
+					<h1>No tasks selected</h1>
 				)}
 			</div>
 		</div>

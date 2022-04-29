@@ -37,6 +37,12 @@
 		}
 
 		&-row {
+			&:hover {
+				img {
+					opacity: 0.4;
+				}
+			}
+
 			display: flex;
 			align-items: center;
 			margin-bottom: 15px;
@@ -50,6 +56,15 @@
 				margin-left: 10px;
 				width: 100%;
 				font-size: 16px;
+
+				text-overflow: ellipsis;
+				overflow: hidden;
+				width: 100%;
+				white-space: nowrap;
+			}
+
+			img {
+				opacity: 0;
 			}
 		}
 	}
